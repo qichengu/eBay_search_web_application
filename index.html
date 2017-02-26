@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)http://jqueryvalidation.org/files/demo/ -->
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script>
+    basement_page=0;
+    total_number=0;
+    item_per_page=0;
+    </script>
+
+    <script>
+    function UpperCaseArray(input) {
+        var result = input.replace(/([A-Z]+)/g, ",$1").replace(/^,/, "");
+        var results = result.replace(/,/g, " ")
+        return results;
+    }
+    </script>  
+    
+    <script>
+    function checkempty(temp_in)
+        {
+            
+            if (temp_in=="")
+                return "N/A";
+            else return temp_in;
+            
+        }
+    
+    </script>
+    <style type="text/css">
+        .nopad{margin:0;padding:0;border:0}
+        .level3 {
+            display:inline;
+        }
+        .container{
+            border: 0;
+            margin: 0;
+            padding: 0;
+        
+        }
+        .spacing
+        {
+            height:20px;
+        }
+        .modal_pic{
+            height:100%;
+            width:100%;
+        }
+        
+        @media screen and (min-width: 768px) {
+        .newline
+        {display:none;
+        }
+        .la{
+            text-align: right;
+        }
+        .spacing
+        {
+            width:100%;
+        }
+            .item_pic{width: 70px;height:70px}
+                .spacing
+        {
+            height:20px;
+        }
+        }
+        @media screen and (max-width: 767px) {
+        .newline
+        {display:inline;
+        }
+        .hello
+            {display:none;}
+        .spacing
+        {
+            height:20px;
+        }
+         h1{font-size:20px;}
+            .item_pic{width: 40px;height:40px}
+        }
+        body{margin-left:10px; margin-right:10px;}
+        
+        .modal-body {
+            position: relative;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        input.error {border-color: red;}
+        label.error {color: red;}
+        /*.level2{
+            display:inline;
+        }*/
+        .level3{display:block;}
+        .level4 {display:inline;}
+        .level2{padding-right: 0;margin-right: 0;border-right: 0;}
+        
+     </style> 
+    <!--<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">-->
+    <!--<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>-->
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.js"></script>
+<!--script src="./jquery.js"></script>
+	<script src="./jquery-1.11.1.js"></script>
+	<script src="./jquery.validate.js"></script>
+-->
+    
+<script>
+    
+            function showmodal(item_index)
+            {
+$('#myModal'+item_index).on('show', function () {
+       $(this).find('.modal-body').css({
+              width:'auto', //probably not needed
+              height:'auto', //probably not needed 
+              'max-height':'100%'
+       });
+});
+              $('#myModal'+item_index).modal('show');  
+                
+            };
+    
+function put_html(x)
+{
+    //alert("get the data");
+    total_number=x.resultCount;
+    item_per_page=x.itemCount;
+    //alert("hello");
+    //alert(x.ack);
+	//if ((parseInt(x.resultCount))==0)
+	if (x.ack=="No results found"){	
+		//html_text="<h1>No results found</h1>";
+        html_text="<h1>" + x.ack + "</h1>";
+        $('#result').html(html_text);
+        $('#modal_area').html('');
+        $("#page_nav").addClass("hidden");
+        
+	}
+	else{
+        //alert(x.itemCount);
+        //alert(parseFloat(x.resultCount));
+        //alert(parseInt(page_number_to_go)-1);
+        if (basement_page+5 > (parseInt(total_number/item_per_page)+1))
+        {
+            for (ii=(Math.ceil(parseFloat(x.resultCount)/parseFloat(x.itemCount)))%5+1;ii<=5;ii++)
+                $("#l"+ii).addClass("disabled");
+            
+           // parseInt(total_number/item_per_page)+1
+        };
+        //alert(page_number_to_go);
+        //alert(Math.ceil(parseFloat(x.resultCount)/parseFloat(x.itemCount)));
+        if (page_number_to_go>=Math.ceil(parseFloat(x.resultCount)/parseFloat(x.itemCount)))
+        {    $("#l6").addClass("disabled");};
+		if ((parseFloat(x.itemCount))>(parseFloat(x.resultCount)-(page_number_to_go-1)*item_per_page)) 
+        {    item_number = (parseFloat(x.resultCount)-(page_number_to_go-1)*item_per_page);
+        }
+		else
+        {	item_number = parseFloat(x.itemCount);
+        };
+        html_text="<h1>"+parseInt((page_number_to_go-1)*parseInt(x.itemCount)+1)+"-"+parseInt((page_number_to_go-1)*parseInt(x.itemCount)+item_number) + " items out of "+ x.resultCount;
+        html_text+="</h1>";
+		//html_text+="<div>";
+		
+                                                                                    
+		for (item_index=0; item_index<item_number; item_index++)
+		{	
+            html_text+="<div class='row'>";
+            item_with_index="item"+(item_index);
+
+            html_text+="<div class='level2 col-xs-1 col-sm-1 col-md-1 col-lg-1'>" + "<img class='item_pic' src='" + x[item_with_index].basicInfo.galleryURL + "' alt='Item image not found'"+   "onclick='showmodal("+item_index+");'"+">";
+            html_text+="</img></div>";
+            // float='center' vertical-align='center' valign='middle'
+			html_text+="<div class='level2 col-xs-10 col-sm-10 col-md-11 col-lg-7'><div class='level3 col-md-12'><b><a href='" + x[item_with_index].basicInfo.viewItemURL + "' target='_blank'>" + x[item_with_index].basicInfo.title + "</a></b></div>";
+			//html_text+="<br>";
+			//abcdefgh
+			html_text+="<div class='level3 col-md-12'><div class='level4'><b>Price: $"+x[item_with_index].basicInfo.convertedCurrentPrice + "&nbsp;";
+			html_text+="</b></div>";
+            html_text+="<div class='newline'><br></div>";
+//to be added  
+            if ((((x[item_with_index].basicInfo.shippingServiceCost)!=null) && ((parseFloat(x[item_with_index].basicInfo.shippingServiceCost))==0.0)) ||    (((x[item_with_index].shippingInfo.shippingType).search(/Free/i))!=-1)  ||                ((x[item_with_index].basicInfo.shippingServiceCost)=="")        )
+				html_text+="<div class='level4'>(FREE Shipping)";
+			else if (((x[item_with_index].basicInfo.shippingServiceCost)!=null) && ((parseFloat(x[item_with_index].basicInfo.shippingServiceCost))>0.0))
+				html_text+="<div class='level4'>(+ $"+(x[item_with_index].basicInfo.shippingServiceCost)+" for shipping)";
+			html_text+="&nbsp;&nbsp;&nbsp;&nbsp;";
+			html_text+="<i>Location: "+x[item_with_index].basicInfo.location +"</i>";
+			html_text+="&nbsp;&nbsp;&nbsp;&nbsp;";
+			if (x[item_with_index].basicInfo.topRatedListing=="true")
+			{
+				html_text+="<img style='vertical-align:middle;' src='" + "http://cs-server.usc.edu:45678/hw/hw8/itemTopRated.jpg" + "' width=30px height=30px ></img>";
+				html_text+="&nbsp;&nbsp;&nbsp;&nbsp;";
+			};
+			html_text+="</div><div class='level4'><nobr><a class='accordion-toggle' data-toggle='collapse' data-parent='#accordion2' href='#collapse" + item_index + "'>View Details</a></nobr>";
+            fb_img="'http://cs-server.usc.edu:45678/hw/hw8/fb.png'";
+            //
+            
+            fb_title='Price: $'+x[item_with_index].basicInfo.convertedCurrentPrice + "&nbsp;";
+            if ((((x[item_with_index].basicInfo.shippingServiceCost)!=null) && ((parseFloat(x[item_with_index].basicInfo.shippingServiceCost))==0.0)) ||    (((x[item_with_index].shippingInfo.shippingType).search(/Free/i))!=-1)   ||                ((x[item_with_index].basicInfo.shippingServiceCost)=="")          )
+				fb_title+="(FREE Shipping)";
+			else if (((x[item_with_index].basicInfo.shippingServiceCost)!=null) && ((parseFloat(x[item_with_index].basicInfo.shippingServiceCost))>0.0))
+				fb_title+="(+ $"+(x[item_with_index].basicInfo.shippingServiceCost)+" for shipping)";
+            
+       
+            fb_title+=', ' + 'Location:'+x[item_with_index].basicInfo.location;
+            
+            fb_call="fb_post('" + x[item_with_index].basicInfo.title +"','"+ x[item_with_index].basicInfo.viewItemURL + "','" +  x[item_with_index].basicInfo.galleryURL + "','" + fb_title + "')";
+            //alert(fb_title);
+            //alert(fb_call);
+            button_code='<input type="button" style="border:0; padding:0; margin:0; width: 20px; height: 20px; background-image: url('+fb_img+');background-size: 20px 20px; background-repeat: no-repeat;" onclick="' +fb_call+'">';
+            //alert(button_code);
+            html_text+="&nbsp;&nbsp;&nbsp;"+button_code;
+            html_text+="</div>";
+           /* hidden content*/ 
+            html_text+="</div><div class=' level3 col-md-12  accordion' id='accordion2'>";
+html_text+="<div class='accordion-group'>";
+html_text+="<div id='collapse" + item_index + "' class='accordion-body collapse'>";
+html_text+="<div class='accordion-inner'>";
+html_text+="<div class='bs-example'>";
+html_text+="<ul class='nav nav-tabs'>";
+html_text+="<li class='active'>";
+html_text+="<a data-toggle='tab' href='#sectionA" + item_index + "'>Basic Info</a></li>";
+html_text+="<li><a data-toggle='tab' href='#sectionB" + item_index + "'>Seller Info</a></li>";
+html_text+="<li><a data-toggle='tab' href='#sectionC" + item_index + "'>Shipping Info</a></li>";
+html_text+="</ul>";
+html_text+="<div class='tab-content'>";
+html_text+="<div id='sectionA" + item_index + "' class='tab-pane fade in active'>";
+
+html_text+="<div>";
+
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>Category name</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+html_text+=x[item_with_index].basicInfo.categoryName;
+html_text+="</div></div>";
+
+
+
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>Condition</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+
+html_text+=x[item_with_index].basicInfo.conditionDisplayName;
+if (x[item_with_index].basicInfo.conditionDisplayName=="") html_text+="N/A";
+html_text+="</div></div>";
+
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>Buying format</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+            //alert(x[item_with_index].basicInfo.listingType);
+
+if ((x[item_with_index].basicInfo.listingType=="StoreInventory") || (x[item_with_index].basicInfo.listingType=="FixedPrice"))
+    html_text+="Buy It Now";
+else if (x[item_with_index].basicInfo.listingType=="Auction")
+        html_text+="Auction";
+else if (x[item_with_index].basicInfo.listingType=="Classified")
+        html_text+="Classified Ad";
+else
+    html_text+=x[item_with_index].basicInfo.listingType;
+html_text+="</div></div>";
+
+html_text+="</div>";
+
+html_text+="</div>";
+
+html_text+="<div id='sectionB" + item_index + "' class='tab-pane fade'>";
+
+html_text+="<div>";
+
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>User name</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+html_text+=checkempty(x[item_with_index].sellerInfo.sellerUserName);
+html_text+="</div></div>";
+
+
+
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>Feedback score</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+html_text+=checkempty(x[item_with_index].sellerInfo.feedbackScore);
+html_text+="</div></div>";
+
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>Positive feedback</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+if ((x[item_with_index].sellerInfo.positiveFeedbackPercent)=="")
+    html_text+="N/A";
+else
+    html_text+=x[item_with_index].sellerInfo.positiveFeedbackPercent+"%";
+html_text+="</div></div>";
+
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>Feedback rating</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+if ((x[item_with_index].sellerInfo.feedbackRatingStar)=="")
+    html_text+="None";
+else
+    html_text+=x[item_with_index].sellerInfo.feedbackRatingStar;
+html_text+="</div></div>";
+
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>Top rated</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+if ((x[item_with_index].sellerInfo.topRatedSeller)=="true")
+	html_text+="<span class='glyphicon glyphicon-ok' aria-hidden='true' style='color: green;'></span>";
+else
+	html_text+="<span class='glyphicon glyphicon-remove' aria-hidden='true' style='color: red;'></span>";
+html_text+="</div></div>";
+
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>Store</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+if (x[item_with_index].sellerInfo.sellerStoreName!="")
+{
+    html_text+="<a target='_blank' href='" + x[item_with_index].sellerInfo.sellerStoreURL +"' >";
+    html_text+=x[item_with_index].sellerInfo.sellerStoreName;
+    html_text+="</a>";
+}
+else
+{
+    html_text+="N/A";
+};
+html_text+="</div></div>";
+
+html_text+="</div>";
+
+html_text+="</div>";
+
+
+html_text+="<div id='sectionC" + item_index + "' class='tab-pane fade'>";
+
+html_text+="<div>";
+
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>Shipping type</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+html_text+=checkempty(UpperCaseArray(x[item_with_index].shippingInfo.shippingType));
+html_text+="</div></div>";
+
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>Handling time</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+
+if ((x[item_with_index].shippingInfo.handlingTime)=="")
+    html_text+="N/A";
+else
+    html_text+=x[item_with_index].shippingInfo.handlingTime+ ' day(s)';
+html_text+="</div></div>";
+
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>Shipping locations</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+html_text+=checkempty(x[item_with_index].shippingInfo.shipToLocations);
+html_text+="</div></div>";
+
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>Expedited shipping</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+if ((x[item_with_index].shippingInfo.expeditedShipping)=="true")
+	html_text+="<span class='glyphicon glyphicon-ok' aria-hidden='true' style='color: green;'></span>";
+else
+	html_text+="<span class='glyphicon glyphicon-remove' aria-hidden='true' style='color: red;'></span>";
+html_text+="</div></div>";
+
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>One day shipping</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+if ((x[item_with_index].shippingInfo.oneDayShippingAvailable)=="true")
+	html_text+="<span class='glyphicon glyphicon-ok' aria-hidden='true' style='color: green;'></span>";
+else
+	html_text+="<span class='glyphicon glyphicon-remove' aria-hidden='true' style='color: red;'></span>";
+html_text+="</div></div>";    
+    
+html_text+="<div class='row'><div class='level2 col-xs-12 col-sm-3 col-md-3 col-lg-3'>";
+html_text+="<b>Returns accepted</b>";
+html_text+="</div>";
+html_text+="<div class='level2 col-xs-12 col-sm-6 col-md-6'>";
+if ((x[item_with_index].shippingInfo.returnsAccepted)=="true")
+	html_text+="<span class='glyphicon glyphicon-ok' aria-hidden='true' style='color: green;'></span>";
+else
+	html_text+="<span class='glyphicon glyphicon-remove' aria-hidden='true' style='color: red;'></span>";
+html_text+="</div></div>";
+ 
+    
+    
+html_text+="</div>";
+
+html_text+="</div>";
+
+
+
+    html_text+="</div></div></div></div></div></div>";
+            
+            
+            /*end of hidden content*/
+            
+
+			html_text+="</div></div></div><div class='spacing level2 row'>&nbsp;</div>";
+		}
+		html_text+="</div>";
+    modal_text="";    
+       
+    for (item_index=0; item_index<item_number; item_index++)
+    {    
+        
+        item_with_index="item"+(item_index);
+            /*modal*/
+            
+        modal_text+="<div id='myModal" + item_index + "' class='modal fade'>";
+        modal_text+="<div class='modal-dialog'>";
+        modal_text+="<div class='modal-content'>";
+        modal_text+="<div class='modal-header'>";
+        modal_text+="<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>";
+        modal_text+="<h4 class='modal-title'>";
+        modal_text+=x[item_with_index].basicInfo.title;
+        modal_text+="</h4></div>";
+        modal_text+="<div class='modal-body'>";
+        modal_text+="<img class='modal_pic' src='";
+        if (((x[item_with_index].basicInfo.pictureURLSuperSize)==null) || ((x[item_with_index].basicInfo.pictureURLSuperSize)==""))
+        {
+            modal_text+=x[item_with_index].basicInfo.galleryURL;
+        }
+        else
+        {
+            modal_text+=x[item_with_index].basicInfo.pictureURLSuperSize;  
+        };
+        modal_text+="'/>";
+        modal_text+="</div></div></div></div>";            
+        //alert(modal_text);
+            
+    /*end of modal*/
+            
+    };
+        
+    $('#result').html(html_text);
+    //document.getElementById("result").innerHTML=html_text;
+    $('#modal_area').html(modal_text);
+    $("#page_nav").removeClass("hidden");
+	}
+        
+        
+}
+    
+    
+</script>        
+<!--<script>
+page_number_to_go=1;
+
+page_to_go=page_number_to_go.toString();
+</script>-->
+	<script>
+    $.validator.addMethod("greaterThan", function(value, element, param) {
+      /*  test_param=$(param);
+        alert(param);
+        alert(typeof(test_param));
+        alert(($(param)).getAttribute("value"));
+        $.each( $(param), function(i, n){
+    alert( "Name: " + i + ", Value: " + n );
+});*/
+        if (($(param).val())=="")
+            return true;
+        else
+            return this.optional(element) || parseFloat(value) >= parseFloat($(param).val());
+        
+    }, "greaterthan test fails");
+
+
+        
+        
+			/*$.validator.addMethod("greaterThan", function (value, element, param) {
+				// bind to the blur event of the target in order to revalidate whenever the target field is updated            
+				 var target = $(param);
+                 //alert(element);
+				.unbind(".validate-greaterThan")
+				.bind
+				(
+					"blur.validate-greaterThan", 
+					function ()
+					{
+						$(element).valid();
+					}
+				);
+
+				return parseFloat(value) >= parseFloat(target.val());
+			},
+			"Maximum price cannot be less than minimum price or below 0"
+			);*/ 
+        
+/*    $.validator.addMethod("greaterThan", function (value, element, param) {
+    var $element = $(element)
+        , $min;
+
+    if (typeof(param) === "string") {
+        $min = $(param);
+    } else {
+        $min = $("#" + $element.data("min"));
+    }
+
+    if (this.settings.onfocusout) {
+        $min.off(".validate-greaterThan").on("blur.validate-greaterThan", function () {
+            $element.valid();
+        });
+    };
+    alert(parseFloat(value));
+        alert($min);
+    return parseFloat(value) > parseFloat($min.val());
+}, "Max must be greater than min");
+
+$.validator.addClassRules({
+    greaterThan: {
+        greaterThan: true
+    }
+});    
+        
+        
+  */      
+        
+	$.validator.setDefaults({
+		submitHandler: function() {
+
+        
+            page_number_to_go=1;
+            basement_page=0;
+            
+            $("#p1").html(1);
+            $("#p2").html(2);
+            $("#p3").html(3);
+            $("#p4").html(4);
+            $("#p5").html(5);
+            $("#page_nav").addClass("hidden");
+            
+            
+            
+            
+                        
+            $("#l1").addClass("active");
+            $("#l2").removeClass("active");
+            $("#l3").removeClass("active");
+            $("#l4").removeClass("active");
+            $("#l5").removeClass("active");
+        
+        
+            $("#l0").addClass("disabled");
+            $("#l1").removeClass("disabled");
+            $("#l2").removeClass("disabled");
+            $("#l3").removeClass("disabled");
+            $("#l4").removeClass("disabled");
+            $("#l5").removeClass("disabled");
+            $("#l6").removeClass("disabled");
+            make_submit();
+            return false;
+        }
+	});
+	$().ready(function() {
+
+
+		// validate signup form on keyup and submit
+		$("#myForm").validate({
+			rules: {
+				keywords: {
+                    required: true,
+                    minlength: 1,
+                },
+               	price_down: {
+					number: true,
+					min: 0,
+                   
+				},
+				price_up: {
+					number: true,
+					min: 0,
+                    greaterThan: "#price_down",
+				},
+                Max_days: {
+                    digits: true,
+                    min: 1,
+                }
+			},
+			messages: {
+                keywords: {
+                    required: "Please enter a key word",
+                    minlength: "Please enter a key word",
+                },
+                
+				price_down: {
+					number: "Price should be a valid number",
+					min: "Minimum price cannot be below 0",
+				},
+				price_up: {
+					number: "Price should be a valid number",
+					min: "Maximum price cannot be less than minimum price or below 0",
+                    greaterThan: "Maximum price cannot be less than minimum price or below 0",
+				},
+                Max_days: {
+                    digits: "Max handling time should be a valid digit",
+                    min: "Max handling time should be greater than or equal to 1",
+                }
+			}
+		});
+	});
+	</script>
+    
+    <script>
+    
+    function clearform()
+	{
+		$(':input','#myForm')
+        .not(':button, :submit, :reset, :hidden select')
+        .val('')
+        .removeAttr('checked')
+        .removeAttr('selected');
+        /*$("#keywords").val("");
+		what.price_down.value="";
+		what.price_up.value="";
+		what.New.checked=false;
+		what.Used.checked=false;
+		what.Very_Good.checked=false;
+		what.Good.checked=false;
+		what.Acceptable.checked=false;
+		what.Buy_It_Now.checked=false;
+		what.Auction.checked=false;
+		what.Classified_Ads.checked=false;
+		what.Return_accepted.checked=false;
+		what.Free_Shipping.checked=false;
+		what.Expedited_shipping_available.checked=false;
+		what.Max_days.value="";
+		what.Sort_by.value="Best_Match";
+		what.Results_Per_Page.value="5";
+		results.innerHTML="";*/
+        //alert(getElementById("Sort_by").value);
+        //="Best_Match";
+        $("#Sort_by").prop('selectedIndex',0);
+		$("#Results_Per_Page").prop('selectedIndex',0);
+        $("#result").html("");
+        $("#page_nav").addClass("hidden");
+        
+        $("#l1").addClass("active");
+        $("#l2").removeClass("active");
+        $("#l3").removeClass("active");
+        $("#l4").removeClass("active");
+        $("#l5").removeClass("active");
+
+        
+        $("#l0").addClass("disabled");
+        $("#l1").removeClass("disabled");
+        $("#l2").removeClass("disabled");
+        $("#l3").removeClass("disabled");
+        $("#l4").removeClass("disabled");
+        $("#l5").removeClass("disabled");
+        $("#l6").removeClass("disabled");
+	}
+
+    </script>
+</head>
+
+
+
+<body>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '100968373568343',
+          xfbml      : true,
+          version    : 'v2.3',
+        status: true,
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+ 
+   function fb_post(name1, link1, picture1, description1){
+FB.ui(
+  {
+      method: 'feed',
+    //href: 'https://developers.facebook.com/docs/',
+      name: name1,
+      link: link1,
+      picture: picture1,
+      caption: 'Search Information from eBay.com',
+      description: description1,
+      message: "hello",
+  },
+  function(post_id) {
+      //alert(JSON.stringify(post_id));
+      if (post_id!=null) {
+      alert('Posted Successfully');
+    } else {
+      alert('Not Posted');
+    }
+  }
+);
+   }
+</script>
+
+<div class="container">
+<!-- 
+<form action="return.php" class="js-ajax-php-json" method="post" accept-charset="utf-8">
+-->
+	<form action="return.php" class="js-ajax-php-json" id="myForm" name="myForm" method="get">
+		<div class="form-group">
+			<div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ><div  style="display: inline;">
+                    <img src="http://cs-server.usc.edu:45678/hw/hw8/ebay.jpg" height=40px width=80px alt="ebay logo not found" />
+                </div>
+                <div  style="display: inline; font-size: 25px;" vertical-align="center" valign="middle">
+                    <b>Shopping</b>
+                </div>
+            </div>
+                </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-lg-2 la"> <label for="keywords">Key words:<span style="color:red;">*</span></label></div>
+                <div class="col-xs-12 col-sm-8 col-lg-6"> <input class="form-control" id="keywords" name="keywords" placeholder="Enter keyword" type="text"></div>
+            </div>
+            <div class='spacing level2 row' >&nbsp;</div>
+
+            
+             <div class="row">
+                <div class="col-xs-12 col-sm-4 col-lg-2 la" ><label class="control-label">Price range:</label></div>
+                <div class="col-xs-12 col-sm-4 col-lg-3"><input class="form-control" type="text" value="" id="price_down" name="price_down" placeholder="from ($)"></div>
+                <div class="col-xs-12 col-sm-4 col-lg-3"><input class="form-control" type="text" value="" id="price_up" name="price_up" placeholder="to ($)"></div>
+            </div>
+            
+            <div class='spacing level2 row' >&nbsp;</div>
+ 				<div class="row">
+                    <div class="label-control col-xs-12 col-sm-4 col-lg-2 la" ><label class="control-label" >Condition:</label></div>
+                    <div class="col-xs-12 col-sm-8 col-lg-6" >
+                    <span><label class="checkbox-inline"><input type="checkbox" value="" id="New" name="New">New&nbsp;</label></span>
+                    <span><label class="checkbox-inline"><input type="checkbox" value="" id="Used" name="Used">Used&nbsp;</label></span>
+                    <span><label class="checkbox-inline"><input type="checkbox" value="" id="Very_Good" name="Very_Good">Very Good&nbsp;</label></span>
+                    <span><label class="checkbox-inline"><input type="checkbox" value="" id="Good" name="Good">Good&nbsp;</label></span>
+                    <span><label class="checkbox-inline"><input type="checkbox" value="" id="Acceptable" name="Acceptable">Acceptable&nbsp;</label></span>
+                    </div>
+                </div>
+            <div class='spacing level2 row' >&nbsp;</div>
+               <div class="row">
+                    <div class="col-xs-12 col-sm-4 col-lg-2 la" ><label class="control-label" >Buying&nbsp;formats:</label></div>
+                    <div class="col-xs-12 col-sm-8 col-lg-6">
+                        <span><label class="checkbox-inline"><input type="checkbox" value="" id="Buy_It_Now"  name="Buy_It_Now">Buy&nbsp;It&nbsp;Now&nbsp;</label></span>
+                        <span><label class="checkbox-inline"><input type="checkbox" value="" id="Auction" name="Auction">Auction&nbsp;</label></span>
+                        <span><label class="checkbox-inline"><input type="checkbox" value="" id="Classified_Ads"  name="Classified_Ads">Classified&nbsp;Ads</label></span>
+                    </div>
+                </div>
+            <div class='spacing level2 row' >&nbsp;</div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4 col-lg-2 la" ><label class="control-label" >Seller:</label></div>
+                    <div class="col-xs-12 col-sm-8 col-lg-6"><label class="checkbox-inline"><input type="checkbox" value="" id="Return_accepted" name="Return_accepted">Return accepted</label></div>
+                </div>
+            <div class='spacing level2 row' >&nbsp;</div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4 col-lg-2 la" ><label class="control-label" >Shipping:</label></div>
+                    <div class="col-xs-12 col-sm-8 col-lg-6">
+                        <span><label class="checkbox-inline"><input type="checkbox" value="" id="Free_shipping"  name="Free_shipping">Free&nbsp;Shipping&nbsp;</label></span>
+                        <span><label class="checkbox-inline"><input type="checkbox" value="" id="Expedited_shipping_available"  name="Expedited_shipping_available">Expedited&nbsp;shipping</label></span>
+                    </div>
+                </div>
+            <div class='spacing level2 row' >&nbsp;</div>
+                <div class="row">
+                    <div class="hello col-xs-12 col-sm-4 col-lg-2" ><label class="control-label" ></label></div>
+                    <div class="col-xs-12 col-sm-8 col-lg-6"> <input class="form-control" type="text" id="Max_days" name="Max_days" placeholder="Max handling time(days)"></div>
+                </div>
+
+            <div class='spacing level2 row' >&nbsp;</div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4 col-lg-2 la" ><label for="Sort_by" >Sort by:</label></div>
+					<div class="col-xs-12 col-sm-8 col-lg-6">
+                        <select class="form-control" id="Sort_by" name="Sort_by">
+						  <option value="Best_Match" selected >Best&nbsp;Match</option>
+						  <option value="Price_highest_first" >Price:&nbsp;highest&nbsp;first</option>
+						  <option value="Price_Shipping_highest_first" >Price&nbsp;+&nbsp;Shipping:&nbsp;highest&nbsp;first</option>
+						  <option value="Price_Shipping_lowest_first"  >Price&nbsp;+&nbsp;Shipping:&nbsp;lowest&nbsp;first</option>
+				        </select>
+                    </div>
+                </div>
+            <div class='spacing level2 row' >&nbsp;</div>
+					
+				<div class="row">
+                    <div class="col-xs-12 col-sm-4 col-lg-2 la"><label for="Results_Per_Page">Results per page:</label></div>
+					<div class="col-xs-12 col-sm-8 col-lg-6">
+                        <select class="form-control" id="Results_Per_Page" name="Results_Per_Page">
+				            <option value="5"  selected >5</option>
+                            <option value="10" >10</option>
+				        </select>
+                    </div>
+                </div>
+            
+            <div class='spacing level2 row' >&nbsp;</div>
+                
+                <div class="row"> 
+                    <div class="col-xs-12 col-lg-8 la">
+                    
+                            <input type="button" class="btn btn-default" id="clear" name="clear" value="Clear" onclick="clearform();">
+                            <input type="submit" class="btn btn-primary" id="submit" name="submit" value="Search"  />
+                    </div>
+                       
+                   
+                </div>           
+            
+            
+            
+
+		</div>
+	</form>
+</div>
+    
+<div id="result">
+</div>
+<script>
+
+        
+    function mynewpage(page_input){
+        //alert("in");
+        $("#l0").removeClass("disabled");
+        page_number_to_go=parseInt(basement_page)+parseInt(page_input);
+        //alert(typeof(page_number_to_go));
+        page_to_go=page_number_to_go.toString();
+        //alert("current page"+page_to_go);
+        if (page_number_to_go<=0)
+        {    $("#l0").addClass("disabled");
+        //alert("Already in page1");
+        }
+        else{
+             if (page_number_to_go<=Math.ceil(parseFloat(total_number)/parseFloat(item_per_page)))
+         
+            {
+            make_submit();
+            //alert(page_to_go);
+            /*
+            var data = {
+            "pagenumber": page_to_go,
+            "action": "test"
+            };
+            data = $("#myForm").serialize() + "&" + $.param(data);
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "response.php", //Relative or absolute path to response.php file
+                data: data,
+                success: function(data) {
+                    //alert(data["json"]);
+					//var object1={'item':'14" screen'};
+					//alert(object1);
+					//alert(JSON.stringify((object1));
+					var obj = jQuery.parseJSON(data["json"]);
+					//alert(obj);
+                    put_html(obj);
+					
+                }
+            });*/
+        //return false;
+        
+        //alert("done");
+        $("#l1").removeClass("active");
+        $("#l2").removeClass("active");
+        $("#l3").removeClass("active");
+        $("#l4").removeClass("active");
+        $("#l5").removeClass("active");
+        if (page_number_to_go%5==0)
+            using_num=5;
+        else using_num=page_number_to_go%5;
+        $("#l"+using_num).addClass("active");
+        /////
+        $("#l0").removeClass("disabled");
+        $("#l1").removeClass("disabled");
+        $("#l2").removeClass("disabled");
+        $("#l3").removeClass("disabled");
+        $("#l4").removeClass("disabled");
+        $("#l5").removeClass("disabled");
+        $("#l6").removeClass("disabled");
+        if (page_number_to_go<=1)
+        {    $("#l0").addClass("disabled");
+        //alert("Already in page1");
+        };
+
+       
+        if (basement_page+5 > (parseInt(total_number/item_per_page)+1))
+        {
+            for (ii=(parseInt(total_number/item_per_page)+1)%5+1;ii<=5;ii++)
+                $("#l"+ii).addClass("disabled");
+            
+        }
+            /*
+            
+                total_number=x.resultCount;
+    item_per_page=x.itemCount;
+            
+            
+            */
+        }
+        }
+    }
+  
+    function newpage_prev() {
+        page_number_to_go-=1;
+        if (page_number_to_go>=0)
+        {   if ((basement_page>0) && (page_number_to_go%5==0))
+            {   basement_page-=5;
+               
+         //alert("current page"+(parseInt(basement_page)+5));
+                $("#p1").html(basement_page+1);
+                $("#p2").html(basement_page+2);
+                $("#p3").html(basement_page+3);
+                $("#p4").html(basement_page+4);
+                $("#p5").html(basement_page+5);
+            };
+            mynewpage(page_number_to_go%5);
+        }
+    }
+    
+    function newpage_succ() {
+        page_number_to_go+=1;
+        //alert(page_number_to_go);
+        //alert((page_number_to_go-1)*item_per_page);
+        if(total_number>=(page_number_to_go-1)*item_per_page){
+        if (page_number_to_go%5==1)
+        {   basement_page+=5;
+            
+            
+            $("#p1").html(basement_page+1);
+            $("#p2").html(basement_page+2);
+            $("#p3").html(basement_page+3);
+            $("#p4").html(basement_page+4);
+            $("#p5").html(basement_page+5);
+        };//alert("GOOD"+page_number_to_go%5);
+        mynewpage(page_number_to_go%5);
+        if  (page_number_to_go==(parseInt(total_number/item_per_page)+1))  
+            $("#l6").addClass("disabled");
+    }
+    }
+</script>
+<div class="row">
+<div class="col-xs-11 col-sm-11 col-md-8 col-lg-8" style="text-align:center;">
+<nav id="page_nav" name="page_nav" class="hidden">
+  <ul class="pagination">
+    <li id="l0" name="l0" class="disabled"><a href="JavaScript:newpage_prev();" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+    <li id="l1" name="l1" class="active"><a href="JavaScript:mynewpage(1);"><label class="nopad" id="p1" name="p1">1</label><span class="sr-only">(current)</span></a></li>
+    <li id="l2" name="l2" ><a href="JavaScript:mynewpage(2);"><label class="nopad" id="p2" name="p2">2</label><span class="sr-only">(current)</span></a></li>
+    <li id="l3" name="l3" ><a href="JavaScript:mynewpage(3);"><label class="nopad" id="p3" name="p3">3</label><span class="sr-only">(current)</span></a></li>
+    <li id="l4" name="l4" ><a href="JavaScript:mynewpage(4);"><label class="nopad" id="p4" name="p4">4</label><span class="sr-only">(current)</span></a></li>
+    <li id="l5" name="l5" ><a href="JavaScript:mynewpage(5);"><label class="nopad" id="p5" name="p5">5</label><span class="sr-only">(current)</span></a></li>
+    <li id="l6" name="l6" ><a href="JavaScript:newpage_succ();" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>  
+  </ul>
+</nav>
+</div>
+</div>
+<script>
+    
+	function make_submit()  {
+            page_to_go=page_number_to_go.toString();
+            var data = {
+            "pagenumber": page_to_go,
+            "action": "test"
+            };
+            
+            data = $("#myForm").serialize() + "&" + $.param(data);
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "response.php", //Relative or absolute path to response.php file
+                data: data,
+                success: function(data) {
+                    put_html(data);	
+                }
+
+            });
+		}    
+    
+    
+</script>
+<div id="modal_area" name="modal_area">
+</div>
+<!--    
+<nav>
+  <ul class="pagination">
+    <li class="disabled">
+      <span>
+        <span aria-hidden="true">&laquo;</span>
+      </span>
+    </li>
+    <li class="active">
+      <span>1 <span class="sr-only">(current)</span></span>
+    </li>
+    ...
+  </ul>
+</nav>
+-->
+</body></html>
